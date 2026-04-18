@@ -2,11 +2,11 @@
 
 > **Transforme a conversa da consulta em prontuário estruturado em segundos.** O copiloto clínico definitivo para médicos-veterinários que buscam excelência e produtividade.
 
-![ProntuVet Banner](assets/prontuvet-banner-preview.png) *(Caso tenha um banner, substitua este path)*
+![ProntuVet Banner](assets/prontuvet-icon-preview.png) 
 
 ## ✨ Sobre o Projeto
 
-O **ProntuVet** é uma landing page de alta performance e design premium, desenvolvida para apresentar uma solução inovadora de IA para o mercado veterinário. O foco principal é a **interatividade**, permitindo que o usuário visualize em tempo real como a IA processa consultas e gera documentos clínicos detalhados.
+O **ProntuVet Site** é uma landing page de alta performance e design premium, desenvolvida para apresentar uma solução inovadora de IA para o mercado veterinário. O foco principal é a **interatividade**, permitindo que o usuário visualize em tempo real como a IA processa consultas e gera documentos clínicos detalhados.
 
 ### 🚀 Destaques Técnicos
 
