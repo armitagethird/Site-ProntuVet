@@ -2,7 +2,6 @@
 
 > **Transforme a conversa da consulta em prontuário estruturado em segundos.** O copiloto clínico definitivo para médicos-veterinários que buscam excelência e produtividade.
 
-![ProntuVet Banner](assets/prontuvet-icon-preview.png) 
 
 ## ✨ Sobre o Projeto
 
