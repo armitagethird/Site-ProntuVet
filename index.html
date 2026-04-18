@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ProntuVet — Copiloto clínico com IA para veterinários</title>
+<meta name="description" content="Transforme a conversa da consulta em prontuário estruturado em segundos. Copiloto clínico com IA para médicos-veterinários.">
+<link rel="icon" type="image/png" href="assets/prontuvet-icon.png">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CDN (v4 compatible for prototyping) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Outfit', 'system-ui', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace'],
+        },
+        colors: {
+          teal: {
+            50:  '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4', 300: '#5eead4',
+            400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e',
+            800: '#115e59', 900: '#134e4a',
+          },
+        },
+        animation: {
+          'fade-in-up': 'fade-in-up 0.7s ease-out forwards',
+          'pulse-soft': 'pulse-soft 3s ease-in-out infinite',
+          'float': 'float 5s ease-in-out infinite',
+          'shimmer': 'shimmer 2.5s linear infinite',
+        },
+      }
+    }
+  }
+</script>
+
+<!-- React + Babel -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- lucide icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<style>
+  html, body { scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-feature-settings: "cv02","cv03","cv04","cv11";
+    letter-spacing: -0.011em;
+    background: #fafcfd;
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+  }
+  body.dark {
+    background: #0a1418;
+    color: #f1f5f9;
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-soft {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.75; transform: scale(1.05); }
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes scroll-horizontal {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes caret {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  @keyframes glow-pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(20,184,166,0.4), 0 0 40px rgba(20,184,166,0.15); }
+    50% { box-shadow: 0 0 0 12px rgba(20,184,166,0), 0 0 60px rgba(20,184,166,0.25); }
+  }
+
+  .glass {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+  body.dark .glass {
+    background: rgba(16,26,32,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.035;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(rgba(15,118,110,0.1) 1px, transparent 0);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 95%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 95%);
+  }
+  body.dark .dot-grid {
+    background-image: radial-gradient(rgba(45,212,191,0.14) 1px, transparent 0);
+  }
+
+  .brand-gradient {
+    background-image: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 40%, #059669 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+  }
+
+  /* Scrollbar */
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+
+  .caret::after {
+    content: '▎';
+    color: #14b8a6;
+    animation: caret 1s ease-in-out infinite;
+    margin-left: 1px;
+  }
+
+  /* Marquee */
+  .marquee-track {
+    animation: scroll-horizontal 40s linear infinite;
+  }
+
+  /* Shimmer highlight */
+  .shimmer-text {
+    background: linear-gradient(90deg, currentColor 0%, currentColor 40%, #14b8a6 50%, currentColor 60%, currentColor 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* Device frame */
+  .phone-frame {
+    background: #0a1418;
+    border-radius: 54px;
+    padding: 10px;
+    box-shadow:
+      inset 0 0 0 2px rgba(255,255,255,0.08),
+      0 30px 60px -20px rgba(13,148,136,0.25),
+      0 50px 100px -30px rgba(0,0,0,0.35);
+  }
+  .phone-screen {
+    border-radius: 44px;
+    overflow: hidden;
+    background: #fafcfd;
+    position: relative;
+    height: 100%;
+  }
+
+  /* Browser frame */
+  .browser-frame {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(15,23,42,0.08),
+      0 30px 80px -20px rgba(13,148,136,0.2),
+      0 50px 120px -30px rgba(0,0,0,0.25);
+  }
+
+  /* Noise fabric */
+  .noise-bg {
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(45,212,191,0.12), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 30%, rgba(59,130,246,0.08), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 60%, rgba(16,185,129,0.08), transparent 60%);
+  }
+  body.dark .noise-bg {
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 0%, rgba(45,212,191,0.18), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 85% 30%, rgba(59,130,246,0.12), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 60%, rgba(16,185,129,0.12), transparent 60%);
+  }
+
+  .link-underline {
+    background-image: linear-gradient(currentColor,currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.3s;
+  }
+  .link-underline:hover { background-size: 100% 1px; }
+
+  /* Hide tweaks panel when off */
+  .tweaks-hidden { display: none !important; }
+
+  /* Glow ring for active mic */
+  .mic-glow { animation: glow-pulse 1.6s ease-in-out infinite; }
+
+  /* Tabular */
+  .tabular { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body class="overflow-x-hidden">
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="env,react" src="site/i18n.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="site/icons.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="site/ui.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="site/demo-phone.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="site/demo-desktop.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="site/sections.jsx"></script>
+  <script type="text/babel" data-presets="env,react" src="site/app.jsx"></script>
+</body>
+</html>
