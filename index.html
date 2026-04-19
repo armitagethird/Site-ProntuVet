@@ -3,8 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ProntuVet — Copiloto clínico com IA para veterinários</title>
-<meta name="description" content="Transforme a conversa da consulta em prontuário estruturado em segundos. Copiloto clínico com IA para médicos-veterinários.">
+<title>ProntuVet — Prontuário Veterinário com IA em Segundos</title>
+<meta name="description" content="Transforme a consulta em prontuário estruturado em segundos. Copiloto clínico com IA para médicos-veterinários. Gratuito para começar — sem cartão de crédito.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="ProntuVet">
+<meta name="keywords" content="prontuário veterinário digital, software veterinário IA, copiloto clínico veterinário, prontuário eletrônico veterinário, sistema veterinário online, inteligência artificial veterinária, prontuvet">
+<meta name="geo.region" content="BR">
+<meta name="theme-color" content="#14b8a6">
+<link rel="canonical" href="https://prontuvet.app/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://prontuvet.app/">
+<meta property="og:title" content="ProntuVet — Prontuário Veterinário com IA em Segundos">
+<meta property="og:description" content="Transforme a consulta em prontuário estruturado em segundos. IA especializada em medicina veterinária. Gratuito para começar.">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="ProntuVet">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ProntuVet — Prontuário Veterinário com IA em Segundos">
+<meta name="twitter:description" content="Transforme a consulta em prontuário estruturado em segundos. IA especializada em medicina veterinária.">
+
 <link rel="icon" type="image/png" href="assets/prontuvet-icon.png">
 
 <!-- Fonts -->
@@ -48,6 +68,9 @@
 
 <!-- lucide icons -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<!-- anime.js v4 -->
+<script src="https://cdn.jsdelivr.net/npm/animejs@4.3.6/dist/bundles/anime.umd.min.js"></script>
 
 <style>
   html, body { scroll-behavior: smooth; }
@@ -213,10 +236,79 @@
 
   /* Tabular */
   .tabular { font-variant-numeric: tabular-nums; }
+
+  /* Scroll reveal */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1);
+  }
+  [data-reveal].in-view {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Unified flowing page background */
+  .page-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    background:
+      radial-gradient(ellipse 100% 55% at 8% 12%, rgba(45,212,191,0.055) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 60% at 92% 38%, rgba(59,130,246,0.04) 0%, transparent 55%),
+      radial-gradient(ellipse 90% 65% at 50% 85%, rgba(16,185,129,0.04) 0%, transparent 55%);
+  }
+  body.dark .page-bg {
+    background:
+      radial-gradient(ellipse 100% 55% at 8% 12%, rgba(45,212,191,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 60% at 92% 38%, rgba(59,130,246,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse 90% 65% at 50% 85%, rgba(16,185,129,0.06) 0%, transparent 55%);
+  }
+
+  /* Subtle section dividers */
+  section + section { border-top: 1px solid rgba(15,118,110,0.06); }
+  body.dark section + section { border-top: 1px solid rgba(45,212,191,0.05); }
 </style>
 </head>
 <body class="overflow-x-hidden">
   <div id="root"></div>
+
+  <div class="page-bg" aria-hidden="true"></div>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ProntuVet",
+    "url": "https://prontuvet.app",
+    "applicationCategory": "HealthApplication",
+    "applicationSubCategory": "Veterinary Software",
+    "operatingSystem": "Web, iOS, Android",
+    "description": "Copiloto clínico com IA para médicos-veterinários. Transforma a conversa da consulta em prontuário estruturado em segundos.",
+    "featureList": ["Transcrição de áudio com IA", "Prontuário estruturado automático", "ProntuLink — link compartilhável do prontuário", "Timeline clínica cronológica", "Templates personalizáveis", "Resumo para o tutor", "Conformidade LGPD"],
+    "inLanguage": ["pt-BR", "en"],
+    "offers": [
+      {"@type": "Offer", "name": "Gratuito", "price": "0.00", "priceCurrency": "BRL", "description": "20 consultas por mês"},
+      {"@type": "Offer", "name": "Essential", "price": "34.90", "priceCurrency": "BRL", "billingIncrement": "P1M"},
+      {"@type": "Offer", "name": "Platinum", "price": "69.90", "priceCurrency": "BRL", "billingIncrement": "P1M", "description": "200 consultas por mês, ProntuLink"},
+      {"@type": "Offer", "name": "Clínica", "price": "149.90", "priceCurrency": "BRL", "billingIncrement": "P1M", "description": "Consultas ilimitadas, múltiplos veterinários"}
+    ],
+    "publisher": {"@type": "Organization", "name": "ProntuVet", "url": "https://prontuvet.app"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "O ProntuVet substitui meu prontuário em papel?", "acceptedAnswer": {"@type": "Answer", "text": "Sim. O prontuário gerado é completo, estruturado, editável e pode ser exportado em PDF a qualquer momento. Fica armazenado na sua conta com acesso cronológico."}},
+      {"@type": "Question", "name": "Funciona offline?", "acceptedAnswer": {"@type": "Answer", "text": "A gravação inicia no navegador mas o processamento com IA exige conexão. Recomendamos Wi-Fi ou 4G/5G estável durante o envio."}},
+      {"@type": "Question", "name": "Qual IA é usada?", "acceptedAnswer": {"@type": "Answer", "text": "Google Gemini 2.5 Flash-Lite, com prompts otimizados para medicina veterinária. Nenhum dado é usado para treinar modelos."}},
+      {"@type": "Question", "name": "O ProntuVet substitui meu sistema de gestão atual?", "acceptedAnswer": {"@type": "Answer", "text": "Não precisa substituir nada. O ProntuVet é um copiloto clínico — faz o que nenhum sistema tradicional faz: transforma a consulta falada em prontuário estruturado em segundos. Use ao lado do que você já usa."}}
+    ]
+  }
+  </script>
 
   <script type="text/babel" data-presets="env,react" src="site/i18n.jsx"></script>
   <script type="text/babel" data-presets="env,react" src="site/icons.jsx"></script>

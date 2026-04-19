@@ -1,5 +1,35 @@
 // Sections: Nav, Hero, How, Features, Desktop, Security, Testimonials, Pricing, FAQ, CTA, Footer
 
+// Animated number counter powered by anime.js v4
+const StatCounter = ({ value, label }) => {
+  const [ref, inView] = useInView({ threshold: 0.6 });
+  const [display, setDisplay] = useState(value);
+  const [fired, setFired] = useState(false);
+
+  useEffect(() => {
+    if (!inView || fired || !window.anime || !window.anime.animate) return;
+    setFired(true);
+    const match = value.match(/^(\d+)(.*)/);
+    if (!match) return;
+    const target = parseInt(match[1], 10);
+    const suffix = match[2];
+    const obj = { val: 0 };
+    window.anime.animate(obj, {
+      val: target,
+      duration: 1600,
+      ease: 'outExpo',
+      onUpdate() { setDisplay(Math.round(obj.val) + suffix); },
+    });
+  }, [inView, fired, value]);
+
+  return (
+    <div ref={ref}>
+      <div className="text-2xl md:text-3xl font-black tracking-tighter brand-gradient">{display}</div>
+      <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1">{label}</div>
+    </div>
+  );
+};
+
 // --- Nav ---
 const Nav = ({ lang, setLang, dark, setDark, tweaksOn, setTweaksOn }) => {
   const t = window.I18N[lang];
@@ -47,7 +77,7 @@ const Nav = ({ lang, setLang, dark, setDark, tweaksOn, setTweaksOn }) => {
 const Hero = ({ lang }) => {
   const t = window.I18N[lang];
   return (
-    <section className="relative pt-32 md:pt-40 pb-20 md:pb-28 overflow-hidden">
+    <section id="hero" className="relative pt-24 md:pt-32 pb-10 md:pb-14 overflow-hidden">
       <div className="absolute inset-0 dot-grid opacity-70"/>
       <div className="absolute inset-0 noise-bg"/>
       <div className="relative max-w-6xl mx-auto px-4">
@@ -70,18 +100,11 @@ const Hero = ({ lang }) => {
               {t.hero_trust}
             </div>
 
-            {/* Stat strip */}
+            {/* Stat strip — animated counters via anime.js */}
             <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
-              {[
-                {n:'28s', l: lang==='pt'?'por prontuário':'per record'},
-                {n:'100%', l: lang==='pt'?'RLS auditado':'audited RLS'},
-                {n:'30min', l: lang==='pt'?'de áudio/consulta':'audio/visit'},
-              ].map((s,i) => (
-                <div key={i}>
-                  <div className="text-2xl md:text-3xl font-black tracking-tighter brand-gradient">{s.n}</div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-1">{s.l}</div>
-                </div>
-              ))}
+              <StatCounter value="28s"   label={lang==='pt'?'por prontuário':'per record'}/>
+              <StatCounter value="100%"  label={lang==='pt'?'RLS auditado':'audited RLS'}/>
+              <StatCounter value="30min" label={lang==='pt'?'de áudio/consulta':'audio/visit'}/>
             </div>
           </div>
 
@@ -103,7 +126,7 @@ const HowItWorks = ({ lang }) => {
     { icon: 'file_text', num: '03', title: t.how_step3_t, desc: t.how_step3_d, from: 'from-emerald-500', to: 'to-blue-600' },
   ];
   return (
-    <section id="how" className="relative py-24 md:py-32">
+    <section id="how" className="relative py-12 md:py-16" data-reveal>
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader eyebrow={t.how_eyebrow} title={t.how_title} sub={t.how_sub}/>
         <div className="grid md:grid-cols-3 gap-6 md:gap-8 relative">
@@ -139,7 +162,7 @@ const Features = ({ lang }) => {
     { icon:'paperclip', title: t.feat_attach_t, desc: t.feat_attach_d, demo: <MiniAttach lang={lang}/> },
   ];
   return (
-    <section id="features" className="relative py-24 md:py-32 bg-gradient-to-b from-transparent via-teal-500/[0.03] to-transparent">
+    <section id="features" className="relative py-12 md:py-16 bg-gradient-to-b from-transparent via-teal-500/[0.03] to-transparent" data-reveal>
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader eyebrow={t.feat_eyebrow} title={t.feat_title} sub={t.feat_sub}/>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -268,11 +291,194 @@ const MiniAttach = ({ lang }) => (
   </div>
 );
 
+// --- ProntuLink ---
+const ProntuLinkDemo = ({ lang }) => {
+  const containerRef = React.useRef(null);
+  const [fired, setFired] = useState(false);
+  const pt = lang === 'pt';
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) setFired(true);
+    }, { threshold: 0.25 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!fired || !window.anime || !window.anime.animate) return;
+    const c = containerRef.current;
+    if (!c) return;
+    const card  = c.querySelector('.plk-card');
+    const rows  = c.querySelectorAll('.plk-row');
+    const chips = c.querySelectorAll('.plk-chip');
+    const rings = c.querySelectorAll('.plk-ring');
+    window.anime.animate(card,  { opacity:[0,1], translateY:[32,0], scale:[0.93,1], duration:700, ease:'outExpo' });
+    window.anime.animate(rows,  { opacity:[0,1], translateX:[-14,0], delay:window.anime.stagger(80,{start:320}), duration:420, ease:'outExpo' });
+    window.anime.animate(chips, { opacity:[0,1], scale:[0.5,1], translateY:[10,0], delay:window.anime.stagger(100,{start:850}), duration:550, ease:'spring(1,90,12,0)' });
+    setTimeout(() => {
+      rings.forEach((ring, i) => window.anime.animate(ring, { scale:[1,1.65], opacity:[0.5,0], duration:1800, delay:i*450, loop:true, ease:'outExpo' }));
+    }, 1350);
+  }, [fired]);
+
+  return (
+    <div ref={containerRef} className="flex flex-col items-center gap-5">
+      {/* Card */}
+      <div className="plk-card w-full max-w-[400px] rounded-3xl overflow-hidden shadow-2xl shadow-teal-900/40"
+        style={{opacity:0, background:'#0f1923', border:'1px solid rgba(20,184,166,0.18)'}}>
+        {/* URL bar */}
+        <div className="plk-row px-4 py-2.5 flex items-center gap-2.5 border-b border-white/5"
+          style={{background:'#0a1119', opacity:0}}>
+          <div className="flex gap-1">
+            <span className="w-2 h-2 rounded-full bg-red-500/50"/>
+            <span className="w-2 h-2 rounded-full bg-yellow-500/50"/>
+            <span className="w-2 h-2 rounded-full bg-green-500/50"/>
+          </div>
+          <div className="flex-1 flex items-center gap-1.5 rounded-lg px-3 py-1" style={{background:'rgba(255,255,255,0.05)'}}>
+            <window.Icon name="lock" className="w-3 h-3 text-emerald-400"/>
+            <span className="text-[11px] font-mono text-slate-400">prontuvet.app/p/luna-a3f7</span>
+          </div>
+          <window.Icon name="share" className="w-3.5 h-3.5 text-teal-400"/>
+        </div>
+        {/* Pet header */}
+        <div className="plk-row px-5 py-4 flex items-center gap-3 border-b border-white/5" style={{opacity:0}}>
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white">
+            <window.Icon name="dog" className="w-5 h-5"/>
+          </div>
+          <div>
+            <div className="text-sm font-black text-white">Luna</div>
+            <div className="text-[10px] text-slate-400 font-medium">{pt?'Labrador · 4 anos · Fêmea':'Labrador · 4 yrs · Female'}</div>
+          </div>
+          <div className="ml-auto flex items-center gap-1 px-2.5 py-1 rounded-full border" style={{background:'rgba(20,184,166,0.08)', borderColor:'rgba(20,184,166,0.2)'}}>
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"/>
+            <span className="text-[9px] font-bold text-teal-400 uppercase">{pt?'Ativo':'Active'}</span>
+          </div>
+        </div>
+        {/* Medical rows */}
+        <div className="px-5 py-4 space-y-3">
+          <div className="plk-row" style={{opacity:0}}>
+            <div className="text-[9px] font-black uppercase tracking-widest text-teal-500 mb-1">{pt?'Diagnóstico':'Diagnosis'}</div>
+            <div className="text-xs text-slate-300 font-medium">{pt?'Gastrite aguda · CID K29.1':'Acute gastritis · ICD K29.1'}</div>
+          </div>
+          <div className="plk-row" style={{opacity:0}}>
+            <div className="text-[9px] font-black uppercase tracking-widest text-teal-500 mb-1">{pt?'Conduta':'Treatment'}</div>
+            <div className="text-xs text-slate-300 font-medium">{pt?'Omeprazol 2 mg/kg · 7 dias · jejum 12h':'Omeprazole 2mg/kg · 7 days · 12h fast'}</div>
+          </div>
+          <div className="plk-row rounded-xl px-3 py-2.5 text-[11px] font-medium text-teal-300" style={{background:'rgba(20,184,166,0.07)', border:'1px solid rgba(20,184,166,0.2)', opacity:0}}>
+            {pt?'Retorno em 7 dias. Em caso de vômito persistente, retornar antes.':'Return in 7 days. If vomiting persists, come back sooner.'}
+          </div>
+          {/* Vet signature */}
+          <div className="plk-row flex items-center gap-2 pt-2 border-t border-white/5" style={{opacity:0}}>
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center text-white">
+              <window.Icon name="stethoscope" className="w-3 h-3"/>
+            </div>
+            <div>
+              <div className="text-[10px] font-black text-slate-300">{pt?'Dra. Ana Figueiredo · CRMV-SP 12847':'Dr. Ana Figueiredo · CRMV-SP 12847'}</div>
+              <div className="text-[9px] text-slate-500">{pt?'Assinado digitalmente':'Digitally signed'}</div>
+            </div>
+          </div>
+          {/* Action row */}
+          <div className="plk-row flex gap-2 pt-1" style={{opacity:0}}>
+            <button className="flex-1 h-9 rounded-xl text-[12px] font-bold transition-all" style={{border:'1px solid rgba(255,255,255,0.1)', color:'rgba(148,163,184,0.8)', background:'transparent'}}>
+              {pt?'Salvar PDF':'Save PDF'}
+            </button>
+            <button className="relative flex-1 h-9 rounded-xl text-[12px] font-black transition-all overflow-visible flex items-center justify-center gap-1.5"
+              style={{background:'linear-gradient(135deg,#14b8a6,#10b981)', color:'#072a26'}}>
+              <span className="plk-ring absolute inset-0 rounded-xl border-2 border-teal-400/60" style={{opacity:0}}/>
+              <span className="plk-ring absolute -inset-1 rounded-[14px] border border-teal-400/30" style={{opacity:0}}/>
+              <window.Icon name="share" className="w-3.5 h-3.5"/>
+              {pt?'Compartilhar':'Share'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Recipient chips */}
+      <div className="flex flex-wrap justify-center gap-2">
+        {[
+          {icon:'user',       label:pt?'Tutor · WhatsApp':'Owner · WhatsApp', clr:'bg-emerald-500/10 border-emerald-500/25 text-emerald-400'},
+          {icon:'stethoscope',label:pt?'Veterinário parceiro':'Partner vet',    clr:'bg-blue-500/10 border-blue-500/25 text-blue-400'},
+          {icon:'activity',   label:pt?'Especialista':'Specialist',             clr:'bg-violet-500/10 border-violet-500/25 text-violet-400'},
+        ].map((c,i) => (
+          <div key={i} className={`plk-chip flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11px] font-bold ${c.clr}`} style={{opacity:0}}>
+            <window.Icon name={c.icon} className="w-3 h-3"/>
+            {c.label}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const ProntuLink = ({ lang }) => {
+  const pt = lang === 'pt';
+  return (
+    <section id="prontulink" className="relative py-16 md:py-24 overflow-hidden" data-reveal>
+      <div className="absolute inset-0" style={{background:'linear-gradient(160deg,#050e1a 0%,#071420 55%,#060c12 100%)'}}/>
+      <div className="absolute inset-0 dot-grid opacity-20"/>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[280px] blur-[100px] pointer-events-none" style={{background:'radial-gradient(ellipse at center,rgba(20,184,166,0.22) 0%,transparent 70%)'}}/>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[300px] blur-[120px] pointer-events-none" style={{background:'radial-gradient(ellipse at 80% 100%,rgba(6,182,212,0.12) 0%,transparent 70%)'}}/>
+
+      <div className="relative max-w-6xl mx-auto px-4">
+        <div className="grid lg:grid-cols-[1fr_430px] gap-12 xl:gap-20 items-center">
+
+          {/* Left: copy */}
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 text-[10px] font-black uppercase tracking-widest"
+              style={{background:'rgba(20,184,166,0.08)',border:'1px solid rgba(20,184,166,0.25)',color:'#5eead4'}}>
+              <window.Icon name="sparkle" className="w-3 h-3"/>
+              {pt?'Tecnologia exclusiva Platinum':'Exclusive Platinum Technology'}
+            </div>
+
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-6 text-white">
+              Prontu<span style={{background:'linear-gradient(135deg,#14b8a6,#10b981,#06b6d4)',WebkitBackgroundClip:'text',backgroundClip:'text',color:'transparent',WebkitTextFillColor:'transparent'}}>Link</span>
+            </h2>
+
+            <p className="text-lg md:text-xl font-medium mb-8 max-w-lg leading-relaxed" style={{color:'rgba(148,163,184,0.9)',textWrap:'pretty'}}>
+              {pt
+                ? 'Gere um link seguro e rastreável de qualquer prontuário e compartilhe com o tutor ou outro veterinário em segundos. Sem login. Sem app. Apenas um link.'
+                : 'Generate a secure, traceable link from any patient record and share with the owner or another vet in seconds. No login. No app. Just a link.'}
+            </p>
+
+            <ul className="space-y-4 mb-10">
+              {[
+                {icon:'link',      text:pt?'Link único com validade configurável':'Unique link with configurable expiry'},
+                {icon:'lock',      text:pt?'Acesso protegido — só quem tem o link vê':'Access-controlled — only the link holder can view'},
+                {icon:'user',      text:pt?'Tutor recebe via WhatsApp, sem baixar nada':'Owner receives via WhatsApp, no download needed'},
+                {icon:'file_text', text:pt?'Inclui anexos, laudos e assinatura digital':'Includes attachments, reports and digital signature'},
+              ].map((b,i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+                    style={{background:'rgba(20,184,166,0.1)',border:'1px solid rgba(20,184,166,0.22)'}}>
+                    <window.Icon name={b.icon} className="w-4 h-4 text-teal-400"/>
+                  </div>
+                  <span className="text-sm font-medium pt-1.5" style={{color:'rgba(203,213,225,0.85)'}}>{b.text}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl"
+              style={{background:'linear-gradient(135deg,rgba(20,184,166,0.12),rgba(16,185,129,0.07))',border:'1px solid rgba(20,184,166,0.25)'}}>
+              <window.Icon name="check_circle" className="w-5 h-5 text-emerald-400"/>
+              <span className="text-sm font-bold text-slate-200">{pt?'Incluído em todos os planos Platinum':'Included in all Platinum plans'}</span>
+            </div>
+          </div>
+
+          {/* Right: demo */}
+          <ProntuLinkDemo lang={lang}/>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // --- Desktop section ---
 const DesktopSection = ({ lang }) => {
   const t = window.I18N[lang];
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section id="desktop" className="relative py-12 md:py-16 overflow-hidden" data-reveal>
       <div className="max-w-7xl mx-auto px-4">
         <SectionHeader eyebrow={t.desktop_eyebrow} title={t.desktop_title} sub={t.desktop_sub}/>
         <div className="relative">
@@ -294,7 +500,7 @@ const Security = ({ lang }) => {
     {icon:'code', title: t.sec_code_t, desc: t.sec_code_d},
   ];
   return (
-    <section id="security" className="relative py-24 md:py-32">
+    <section id="security" className="relative py-12 md:py-16" data-reveal>
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader eyebrow={t.sec_eyebrow} title={t.sec_title} sub={t.sec_sub}/>
         <div className="grid md:grid-cols-2 gap-5">
@@ -333,7 +539,7 @@ const Testimonials = ({ lang }) => {
     {q: t.test_3_quote, n: t.test_3_name, r: t.test_3_role, initials:'JR'},
   ];
   return (
-    <section className="relative py-24 md:py-32">
+    <section id="testimonials" className="relative py-12 md:py-16" data-reveal>
       <div className="max-w-6xl mx-auto px-4">
         <SectionHeader eyebrow={t.test_eyebrow} title={t.test_title} sub={t.test_sub}/>
         <div className="grid md:grid-cols-3 gap-5">
@@ -361,67 +567,135 @@ const Testimonials = ({ lang }) => {
 };
 
 // --- Pricing ---
+const PLAT_GRAD = 'linear-gradient(135deg,#475569 0%,#94a3b8 22%,#e2e8f0 42%,#f8fafc 50%,#e2e8f0 58%,#94a3b8 78%,#475569 100%)';
+const PLAT_GRAD_ANIM = { background: PLAT_GRAD, backgroundSize: '200% 100%', animation: 'shimmer 3.2s linear infinite' };
+
+const PricingCard = ({ plan }) => {
+  const { name, badge, proof, desc, price, period, feats, cta, featured, clinic } = plan;
+
+  /* PLATINUM — metallic dark, 2× wide on xl */
+  if (featured) return (
+    <div className="relative md:col-span-2 xl:col-span-2">
+      <div className="absolute -inset-[1.5px] rounded-[2rem]" style={{...PLAT_GRAD_ANIM, opacity: 0.9}}/>
+      <div className="relative rounded-[calc(2rem-1px)] overflow-hidden h-full flex flex-col" style={{background: '#0c1420'}}>
+        <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse 90% 32% at 50% 0%, rgba(226,232,240,0.1) 0%, transparent 65%)'}}/>
+        <div className="relative p-7 flex flex-col gap-5 flex-1">
+          {/* Header */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-black tracking-[0.22em] uppercase" style={{...PLAT_GRAD_ANIM, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', WebkitTextFillColor: 'transparent'}}>Platinum</span>
+            {badge && <span className="ml-auto px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest" style={{background: 'linear-gradient(135deg,#64748b,#94a3b8,#cbd5e1)', color: '#0c1420'}}>{badge}</span>}
+          </div>
+          <p className="text-xs text-slate-400 font-medium leading-snug">{desc}</p>
+          {/* Price */}
+          <div className="flex items-baseline gap-2">
+            <span className="text-5xl font-black tracking-tighter" style={{...PLAT_GRAD_ANIM, WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', WebkitTextFillColor: 'transparent'}}>{price}</span>
+            <span className="text-sm text-slate-500 font-bold">{period}</span>
+          </div>
+          <div className="h-px" style={{background: 'linear-gradient(to right, rgba(148,163,184,0.35), transparent)'}}/>
+          {/* Social proof */}
+          {proof && (
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0"/>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{proof}</span>
+            </div>
+          )}
+          {/* Features — 2 cols on wide layout */}
+          <ul className="flex-1 grid xl:grid-cols-2 xl:gap-x-6 gap-y-2.5">
+            {feats.map((f, j) => (
+              <li key={j} className="flex items-start gap-2 text-xs font-medium text-slate-300">
+                <div className="w-3.5 h-3.5 rounded-full shrink-0 mt-0.5 flex items-center justify-center" style={{background: 'linear-gradient(135deg,#64748b,#e2e8f0)'}}>
+                  <window.Icon name="check" className="w-2 h-2 text-[#0c1420]" strokeWidth={3}/>
+                </div>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <button className="mt-auto h-13 py-3.5 rounded-2xl font-black text-base tracking-tight transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]" style={{...PLAT_GRAD_ANIM, color: '#0c1420'}}>
+            {cta}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* CLÍNICA — jewel purple */
+  if (clinic) return (
+    <div className="relative">
+      <div className="absolute -inset-[1px] rounded-[2rem]" style={{background: 'linear-gradient(135deg,#7c3aed,#4c1d95,#6d28d9,#a78bfa,#7c3aed)', opacity: 0.65}}/>
+      <div className="relative rounded-[calc(2rem-1px)] overflow-hidden h-full flex flex-col" style={{background: '#0d0520'}}>
+        <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse 80% 30% at 50% 0%, rgba(139,92,246,0.22) 0%, transparent 60%)'}}/>
+        <div className="relative p-6 flex flex-col gap-4 flex-1">
+          <div>
+            <div className="text-[10px] font-black uppercase tracking-[0.25em] mb-1" style={{background: 'linear-gradient(135deg,#a78bfa,#c4b5fd,#ede9fe)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', WebkitTextFillColor: 'transparent'}}>{name}</div>
+            <p className="text-xs font-medium mb-3" style={{color: 'rgba(167,139,250,0.65)'}}>{desc}</p>
+            <div className="flex items-baseline gap-1.5">
+              <div className="text-3xl font-black tracking-tighter" style={{background: 'linear-gradient(135deg,#a78bfa,#c4b5fd,#ede9fe)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent', WebkitTextFillColor: 'transparent'}}>{price}</div>
+              <div className="text-xs font-bold" style={{color: 'rgba(139,92,246,0.7)'}}>{period}</div>
+            </div>
+          </div>
+          <div className="h-px" style={{background: 'linear-gradient(to right, rgba(139,92,246,0.35), transparent)'}}/>
+          <ul className="space-y-2 flex-1">
+            {feats.map((f, j) => (
+              <li key={j} className="flex items-start gap-2 text-xs font-medium" style={{color: '#c4b5fd'}}>
+                <div className="w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{background: 'linear-gradient(135deg,#7c3aed,#a78bfa)'}}>
+                  <window.Icon name="check" className="w-2 h-2 text-white" strokeWidth={3}/>
+                </div>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <button className="mt-auto h-10 px-5 rounded-2xl text-sm font-bold transition-all"
+            style={{border: '1px solid rgba(139,92,246,0.45)', color: '#a78bfa', background: 'rgba(139,92,246,0.07)'}}
+            onMouseEnter={e => e.currentTarget.style.background='rgba(139,92,246,0.17)'}
+            onMouseLeave={e => e.currentTarget.style.background='rgba(139,92,246,0.07)'}
+          >{cta}</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* Free / Essential */
+  return (
+    <Card className="p-6 flex flex-col gap-4 h-full">
+      <div>
+        <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 mb-1">{name}</div>
+        <p className="text-xs text-slate-500 font-medium mb-2">{desc}</p>
+        <div className="flex items-baseline gap-1.5">
+          <div className="text-3xl font-black tracking-tighter text-slate-600 dark:text-slate-400">{price}</div>
+          <div className="text-xs text-slate-400 font-bold">{period}</div>
+        </div>
+      </div>
+      <div className="h-px bg-slate-200/60 dark:bg-white/5"/>
+      <ul className="space-y-2 flex-1">
+        {feats.map((f, j) => (
+          <li key={j} className="flex items-start gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+            <window.Icon name="check" className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" strokeWidth={2.5}/>
+            {f}
+          </li>
+        ))}
+      </ul>
+      <Button variant="secondary" size="md" className="mt-auto">{cta}</Button>
+    </Card>
+  );
+};
+
 const Pricing = ({ lang }) => {
   const t = window.I18N[lang];
+  const plans = [
+    { name: t.price_free_name, desc: t.price_free_desc, price: t.price_free_price, period: t.price_free_period, feats: t.price_free_feats, cta: t.price_free_cta },
+    { name: t.price_ess_name, desc: t.price_ess_desc, price: t.price_ess_price, period: t.price_ess_period, feats: t.price_ess_feats, cta: t.price_ess_cta },
+    { name: t.price_plat_name, badge: t.price_plat_badge, proof: t.price_plat_proof, desc: t.price_plat_desc, price: t.price_plat_price, period: t.price_plat_period, feats: t.price_plat_feats, cta: t.price_plat_cta, featured: true },
+    { name: t.price_clinic_name, desc: t.price_clinic_desc, price: t.price_clinic_price, period: t.price_clinic_period, feats: t.price_clinic_feats, cta: t.price_clinic_cta, clinic: true },
+  ];
   return (
-    <section id="pricing" className="relative py-24 md:py-32 bg-gradient-to-b from-transparent via-teal-500/[0.03] to-transparent">
-      <div className="max-w-5xl mx-auto px-4">
+    <section id="pricing" className="relative py-12 md:py-16 bg-gradient-to-b from-transparent via-teal-500/[0.03] to-transparent" data-reveal>
+      <div className="max-w-7xl mx-auto px-4">
         <SectionHeader eyebrow={t.price_eyebrow} title={t.price_title} sub={t.price_sub}/>
-        <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
-          {/* Free */}
-          <Card className="p-8 flex flex-col gap-5">
-            <div>
-              <div className="text-[11px] font-black uppercase tracking-[0.25em] text-slate-500 mb-2">{t.price_free_name}</div>
-              <p className="text-sm text-slate-600 dark:text-slate-400 font-medium mb-4">{t.price_free_desc}</p>
-              <div className="flex items-baseline gap-2">
-                <div className="text-5xl font-black tracking-tighter">{t.price_free_price}</div>
-                <div className="text-sm text-slate-500 font-bold">{t.price_free_period}</div>
-              </div>
-            </div>
-            <div className="h-px bg-slate-200/80 dark:bg-white/5"/>
-            <ul className="space-y-2.5">
-              {t.price_free_feats.map((f,i) => (
-                <li key={i} className="flex items-center gap-2.5 text-sm font-medium text-slate-700 dark:text-slate-300">
-                  <window.Icon name="check" className="w-4 h-4 text-teal-500 shrink-0" strokeWidth={3}/>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <Button variant="secondary" size="lg" className="mt-auto">{t.price_free_cta}</Button>
-          </Card>
-
-          {/* Platinum */}
-          <div className="relative">
-            <div className="absolute -inset-0.5 bg-gradient-to-br from-teal-400 via-emerald-500 to-blue-500 rounded-[2rem] blur opacity-40"/>
-            <Card className="relative p-8 flex flex-col gap-5 border-teal-500/30 bg-white dark:bg-[#0f1a20]">
-              <div className="absolute top-5 right-5 px-3 py-1 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 text-white text-[10px] font-black uppercase tracking-widest shadow-lg shadow-teal-500/30">
-                {t.price_plat_badge} ✦
-              </div>
-              <div>
-                <div className="text-[11px] font-black uppercase tracking-[0.25em] brand-gradient mb-2">{t.price_plat_name}</div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 font-medium mb-4">{t.price_plat_desc}</p>
-                <div className="flex items-baseline gap-2">
-                  <div className="text-5xl font-black tracking-tighter brand-gradient">{t.price_plat_price}</div>
-                  <div className="text-sm text-slate-500 font-bold">{t.price_plat_period}</div>
-                </div>
-              </div>
-              <div className="h-px bg-gradient-to-r from-teal-500/30 to-transparent"/>
-              <ul className="space-y-2.5">
-                {t.price_plat_feats.map((f,i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-sm font-medium text-slate-700 dark:text-slate-300">
-                    <div className="w-4 h-4 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shrink-0">
-                      <window.Icon name="check" className="w-2.5 h-2.5 text-white" strokeWidth={3}/>
-                    </div>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Button variant="primary" size="lg" className="mt-auto" iconRight={<window.Icon name="arrow_right" className="w-4 h-4"/>}>
-                {t.price_plat_cta}
-              </Button>
-            </Card>
-          </div>
+        {/* Grid: [Free 1col][Essential 1col][Platinum 2col][Clinic 1col] = 5 cols on xl */}
+        <div className="grid md:grid-cols-3 xl:grid-cols-5 gap-4 items-stretch">
+          {plans.map((plan, i) => <PricingCard key={i} plan={plan}/>)}
         </div>
+        <p className="text-center text-xs text-slate-500 dark:text-slate-400 mt-6 font-medium">{t.price_note}</p>
       </div>
     </section>
   );
@@ -432,7 +706,7 @@ const FAQ = ({ lang }) => {
   const t = window.I18N[lang];
   const [open, setOpen] = useState(0);
   return (
-    <section id="faq" className="relative py-24 md:py-32">
+    <section id="faq" className="relative py-12 md:py-16" data-reveal>
       <div className="max-w-3xl mx-auto px-4">
         <SectionHeader eyebrow={t.faq_eyebrow} title={t.faq_title}/>
         <div className="space-y-3">
@@ -460,7 +734,7 @@ const FAQ = ({ lang }) => {
 const FinalCTA = ({ lang }) => {
   const t = window.I18N[lang];
   return (
-    <section className="relative py-20 md:py-28">
+    <section id="cta" className="relative py-10 md:py-14" data-reveal>
       <div className="max-w-5xl mx-auto px-4">
         <div className="relative rounded-[2.5rem] overflow-hidden p-10 md:p-16 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-500 via-emerald-600 to-blue-600"/>
@@ -527,4 +801,4 @@ const Footer = ({ lang }) => {
   );
 };
 
-Object.assign(window, { Nav, Hero, HowItWorks, Features, DesktopSection, Security, Testimonials, Pricing, FAQ, FinalCTA, Footer });
+Object.assign(window, { Nav, Hero, HowItWorks, Features, ProntuLink, DesktopSection, Security, Testimonials, Pricing, FAQ, FinalCTA, Footer });
