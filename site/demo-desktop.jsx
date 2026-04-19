@@ -93,6 +93,9 @@ const DemoDesktop = ({ lang = 'pt' }) => {
           </div>
         </div>
 
+        {/* Interaction blocker — keeps the demo view-only */}
+        <div className="absolute inset-0 z-30 cursor-default select-none" aria-hidden="true"/>
+
         {/* Progress dots */}
         <div className="absolute top-4 right-4 flex gap-1.5 z-20">
           {[0, 1, 2, 3].map(i => (

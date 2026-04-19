@@ -3,7 +3,7 @@ const { useState: useS, useEffect: useE } = React;
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "defaultLang": "pt",
-  "defaultDark": false,
+  "defaultDark": true,
   "heroVariant": "split",
   "accentColor": "teal"
 }/*EDITMODE-END*/;

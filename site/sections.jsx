@@ -45,24 +45,33 @@ const Nav = ({ lang, setLang, dark, setDark, tweaksOn, setTweaksOn }) => {
       <div className={`mx-auto max-w-6xl px-4 transition-all`}>
         <div className={`flex items-center justify-between rounded-2xl px-4 md:px-5 h-14 transition-all ${scrolled ? 'glass shadow-lg shadow-black/5' : ''}`}>
           <a href="#" className="shrink-0"><Logo size="sm"/></a>
-          <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-slate-700 dark:text-slate-300 ml-6">
+          <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-slate-700 dark:text-slate-300 mx-auto">
             <a href="#features" className="link-underline hover:text-teal-600">{t.nav_features}</a>
             <a href="#how" className="link-underline hover:text-teal-600">{t.nav_how}</a>
             <a href="#security" className="link-underline hover:text-teal-600">{t.nav_security}</a>
             <a href="#pricing" className="link-underline hover:text-teal-600">{t.nav_pricing}</a>
             <a href="#faq" className="link-underline hover:text-teal-600">{t.nav_faq}</a>
-          </nav>
-          <div className="flex items-center gap-2">
+            <span className="w-px h-4 bg-slate-200 dark:bg-white/10"/>
             <button onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}
-              className="hidden sm:inline-flex h-9 px-3 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300 hover:border-teal-500/40">
+              className="link-underline hover:text-teal-600 font-bold uppercase tracking-widest">
               {lang === 'pt' ? 'EN' : 'PT'}
             </button>
             <button onClick={() => setDark(!dark)}
-              className="h-9 w-9 inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-teal-500/40"
+              className="inline-flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
               aria-label="toggle theme">
               <window.Icon name={dark ? 'sun' : 'moon'} className="w-4 h-4"/>
             </button>
-            <Button variant="ghost" size="sm" className="hidden sm:inline-flex">{t.cta_login}</Button>
+          </nav>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}
+              className="hidden sm:inline-flex lg:hidden h-9 px-3 rounded-xl border border-slate-200 dark:border-white/10 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300 hover:border-teal-500/40">
+              {lang === 'pt' ? 'EN' : 'PT'}
+            </button>
+            <button onClick={() => setDark(!dark)}
+              className="lg:hidden h-9 w-9 inline-flex items-center justify-center rounded-xl border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:border-teal-500/40"
+              aria-label="toggle theme">
+              <window.Icon name={dark ? 'sun' : 'moon'} className="w-4 h-4"/>
+            </button>
             <Button variant="primary" size="sm" iconRight={<window.Icon name="arrow_right" className="w-4 h-4"/>}>
               {t.cta_start}
             </Button>
@@ -77,31 +86,31 @@ const Nav = ({ lang, setLang, dark, setDark, tweaksOn, setTweaksOn }) => {
 const Hero = ({ lang }) => {
   const t = window.I18N[lang];
   return (
-    <section id="hero" className="relative pt-24 md:pt-32 pb-10 md:pb-14 overflow-hidden">
+    <section id="hero" className="relative pt-24 md:pt-32 pb-16 md:pb-20 overflow-x-hidden">
       <div className="absolute inset-0 dot-grid opacity-70"/>
       <div className="absolute inset-0 noise-bg"/>
       <div className="relative max-w-6xl mx-auto px-4">
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
-          <div className="animate-[fade-in-up_0.8s_ease-out]">
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-start">
+          <div className="animate-[fade-in-up_0.8s_ease-out] flex flex-col items-center lg:items-start text-center lg:text-left">
             <Eyebrow className="mb-6">{t.hero_badge}</Eyebrow>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.95] mb-6" style={{textWrap:'balance'}}>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.95] mb-6" style={{textWrap:'balance'}}>
               <span className="block">{t.hero_title_a}</span>
               <span className="block brand-gradient">{t.hero_title_b}</span>
             </h1>
-            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-xl mb-8 font-medium" style={{textWrap:'pretty'}}>
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-xl mb-8 font-medium mx-auto lg:mx-0" style={{textWrap:'pretty'}}>
               {t.hero_sub}
             </p>
-            <div className="flex flex-wrap items-center gap-3 mb-6">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-6">
               <Button size="lg" iconRight={<window.Icon name="arrow_right" className="w-5 h-5"/>}>{t.hero_cta_primary}</Button>
               <a href="#how"><Button size="lg" variant="secondary" icon={<window.Icon name="play" className="w-4 h-4 fill-current"/>}>{t.hero_cta_secondary}</Button></a>
             </div>
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
+            <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
               <window.Icon name="check_circle" className="w-4 h-4 text-emerald-500"/>
               {t.hero_trust}
             </div>
 
             {/* Stat strip — animated counters via anime.js */}
-            <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
+            <div className="mt-10 grid grid-cols-3 gap-4 sm:gap-6 w-full max-w-xs sm:max-w-md mx-auto lg:mx-0">
               <StatCounter value="28s"   label={lang==='pt'?'por prontuário':'per record'}/>
               <StatCounter value="100%"  label={lang==='pt'?'RLS auditado':'audited RLS'}/>
               <StatCounter value="30min" label={lang==='pt'?'de áudio/consulta':'audio/visit'}/>
@@ -425,31 +434,31 @@ const ProntuLink = ({ lang }) => {
         <div className="grid lg:grid-cols-[1fr_430px] gap-12 xl:gap-20 items-center">
 
           {/* Left: copy */}
-          <div>
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-6 text-[10px] font-black uppercase tracking-widest"
               style={{background:'rgba(20,184,166,0.08)',border:'1px solid rgba(20,184,166,0.25)',color:'#5eead4'}}>
               <window.Icon name="sparkle" className="w-3 h-3"/>
               {pt?'Tecnologia exclusiva Platinum':'Exclusive Platinum Technology'}
             </div>
 
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-6 text-white">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] mb-6 text-white">
               Prontu<span style={{background:'linear-gradient(135deg,#14b8a6,#10b981,#06b6d4)',WebkitBackgroundClip:'text',backgroundClip:'text',color:'transparent',WebkitTextFillColor:'transparent'}}>Link</span>
             </h2>
 
-            <p className="text-lg md:text-xl font-medium mb-8 max-w-lg leading-relaxed" style={{color:'rgba(148,163,184,0.9)',textWrap:'pretty'}}>
+            <p className="text-base sm:text-lg md:text-xl font-medium mb-8 max-w-lg leading-relaxed mx-auto lg:mx-0" style={{color:'rgba(148,163,184,0.9)',textWrap:'pretty'}}>
               {pt
                 ? 'Gere um link seguro e rastreável de qualquer prontuário e compartilhe com o tutor ou outro veterinário em segundos. Sem login. Sem app. Apenas um link.'
                 : 'Generate a secure, traceable link from any patient record and share with the owner or another vet in seconds. No login. No app. Just a link.'}
             </p>
 
-            <ul className="space-y-4 mb-10">
+            <ul className="space-y-4 mb-10 w-full max-w-lg mx-auto lg:mx-0">
               {[
                 {icon:'link',      text:pt?'Link único com validade configurável':'Unique link with configurable expiry'},
                 {icon:'lock',      text:pt?'Acesso protegido — só quem tem o link vê':'Access-controlled — only the link holder can view'},
                 {icon:'user',      text:pt?'Tutor recebe via WhatsApp, sem baixar nada':'Owner receives via WhatsApp, no download needed'},
                 {icon:'file_text', text:pt?'Inclui anexos, laudos e assinatura digital':'Includes attachments, reports and digital signature'},
               ].map((b,i) => (
-                <li key={i} className="flex items-start gap-3">
+                <li key={i} className="flex items-start gap-3 text-left">
                   <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
                     style={{background:'rgba(20,184,166,0.1)',border:'1px solid rgba(20,184,166,0.22)'}}>
                     <window.Icon name={b.icon} className="w-4 h-4 text-teal-400"/>
@@ -518,7 +527,7 @@ const Security = ({ lang }) => {
         </div>
 
         {/* Code-like trust strip */}
-        <div className="mt-10 rounded-3xl border border-slate-200/80 dark:border-white/5 bg-white/50 dark:bg-white/[0.02] p-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-xs font-mono text-slate-500">
+        <div className="mt-10 rounded-3xl border border-slate-200/80 dark:border-white/5 bg-white/50 dark:bg-white/[0.02] p-5 md:p-6 flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-8 md:gap-x-10 gap-y-3 text-xs font-mono text-slate-500">
           <div className="flex items-center gap-2"><window.Icon name="check_circle" className="w-4 h-4 text-emerald-500"/> PostgreSQL + RLS</div>
           <div className="flex items-center gap-2"><window.Icon name="check_circle" className="w-4 h-4 text-emerald-500"/> Supabase Storage</div>
           <div className="flex items-center gap-2"><window.Icon name="check_circle" className="w-4 h-4 text-emerald-500"/> TLS 1.3 · SSL</div>
@@ -570,12 +579,12 @@ const Testimonials = ({ lang }) => {
 const PLAT_GRAD = 'linear-gradient(135deg,#475569 0%,#94a3b8 22%,#e2e8f0 42%,#f8fafc 50%,#e2e8f0 58%,#94a3b8 78%,#475569 100%)';
 const PLAT_GRAD_ANIM = { background: PLAT_GRAD, backgroundSize: '200% 100%', animation: 'shimmer 3.2s linear infinite' };
 
-const PricingCard = ({ plan }) => {
+const PricingCard = ({ plan, orderClass = '' }) => {
   const { name, badge, proof, desc, price, period, feats, cta, featured, clinic } = plan;
 
   /* PLATINUM — metallic dark, 2× wide on xl */
   if (featured) return (
-    <div className="relative md:col-span-2 xl:col-span-2">
+    <div className={`relative md:col-span-2 xl:col-span-2 ${orderClass}`}>
       <div className="absolute -inset-[1.5px] rounded-[2rem]" style={{...PLAT_GRAD_ANIM, opacity: 0.9}}/>
       <div className="relative rounded-[calc(2rem-1px)] overflow-hidden h-full flex flex-col" style={{background: '#0c1420'}}>
         <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse 90% 32% at 50% 0%, rgba(226,232,240,0.1) 0%, transparent 65%)'}}/>
@@ -620,7 +629,7 @@ const PricingCard = ({ plan }) => {
 
   /* CLÍNICA — jewel purple */
   if (clinic) return (
-    <div className="relative">
+    <div className={`relative ${orderClass}`}>
       <div className="absolute -inset-[1px] rounded-[2rem]" style={{background: 'linear-gradient(135deg,#7c3aed,#4c1d95,#6d28d9,#a78bfa,#7c3aed)', opacity: 0.65}}/>
       <div className="relative rounded-[calc(2rem-1px)] overflow-hidden h-full flex flex-col" style={{background: '#0d0520'}}>
         <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse 80% 30% at 50% 0%, rgba(139,92,246,0.22) 0%, transparent 60%)'}}/>
@@ -656,6 +665,7 @@ const PricingCard = ({ plan }) => {
 
   /* Free / Essential */
   return (
+    <div className={orderClass}>
     <Card className="p-6 flex flex-col gap-4 h-full">
       <div>
         <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400 dark:text-slate-500 mb-1">{name}</div>
@@ -676,6 +686,7 @@ const PricingCard = ({ plan }) => {
       </ul>
       <Button variant="secondary" size="md" className="mt-auto">{cta}</Button>
     </Card>
+    </div>
   );
 };
 
@@ -687,13 +698,16 @@ const Pricing = ({ lang }) => {
     { name: t.price_plat_name, badge: t.price_plat_badge, proof: t.price_plat_proof, desc: t.price_plat_desc, price: t.price_plat_price, period: t.price_plat_period, feats: t.price_plat_feats, cta: t.price_plat_cta, featured: true },
     { name: t.price_clinic_name, desc: t.price_clinic_desc, price: t.price_clinic_price, period: t.price_clinic_period, feats: t.price_clinic_feats, cta: t.price_clinic_cta, clinic: true },
   ];
+  // Mobile order: Platinum(1) → Essential(2) → Free(3) → Clinic(4)
+  // Desktop (md+): order-none resets to 0, so DOM order takes over: Free, Essential, Platinum, Clinic
+  const mobileOrders = ['order-3 md:order-none', 'order-2 md:order-none', 'order-1 md:order-none', 'order-4 md:order-none'];
   return (
     <section id="pricing" className="relative py-12 md:py-16 bg-gradient-to-b from-transparent via-teal-500/[0.03] to-transparent" data-reveal>
       <div className="max-w-7xl mx-auto px-4">
         <SectionHeader eyebrow={t.price_eyebrow} title={t.price_title} sub={t.price_sub}/>
         {/* Grid: [Free 1col][Essential 1col][Platinum 2col][Clinic 1col] = 5 cols on xl */}
         <div className="grid md:grid-cols-3 xl:grid-cols-5 gap-4 items-stretch">
-          {plans.map((plan, i) => <PricingCard key={i} plan={plan}/>)}
+          {plans.map((plan, i) => <PricingCard key={i} plan={plan} orderClass={mobileOrders[i]}/>)}
         </div>
         <p className="text-center text-xs text-slate-500 dark:text-slate-400 mt-6 font-medium">{t.price_note}</p>
       </div>
@@ -736,13 +750,13 @@ const FinalCTA = ({ lang }) => {
   return (
     <section id="cta" className="relative py-10 md:py-14" data-reveal>
       <div className="max-w-5xl mx-auto px-4">
-        <div className="relative rounded-[2.5rem] overflow-hidden p-10 md:p-16 text-center">
+        <div className="relative rounded-[2.5rem] overflow-hidden p-8 sm:p-10 md:p-16 text-center">
           <div className="absolute inset-0 bg-gradient-to-br from-teal-500 via-emerald-600 to-blue-600"/>
           <div className="absolute inset-0 grain opacity-100"/>
           <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-white/10 blur-3xl"/>
           <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-blue-500/20 blur-3xl"/>
           <div className="relative text-white">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter mb-4" style={{textWrap:'balance'}}>
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-black tracking-tighter mb-4" style={{textWrap:'balance'}}>
               {t.cta_title}
             </h2>
             <p className="text-lg md:text-2xl font-medium text-white/90 mb-8" style={{textWrap:'pretty'}}>
@@ -773,7 +787,7 @@ const Footer = ({ lang }) => {
   return (
     <footer className="relative border-t border-slate-200/80 dark:border-white/5 py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
           <div className="col-span-2">
             <Logo size="md"/>
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 max-w-xs font-medium">{t.footer_tag}</p>
@@ -789,8 +803,11 @@ const Footer = ({ lang }) => {
             </div>
           ))}
         </div>
-        <div className="mt-12 pt-6 border-t border-slate-200/60 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div className="mt-10 pt-6 border-t border-slate-200/60 dark:border-white/5 flex flex-col items-center gap-3 sm:flex-row sm:justify-between text-xs text-slate-500 text-center sm:text-left">
           <div>© 2026 ProntuVet. {t.footer_rights}</div>
+          <div className="text-slate-400 font-medium">
+            {lang==='pt'?'Feito pela ':'Made by '}<span className="font-bold text-slate-500">Vibe Surf</span>
+          </div>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"/>
             <span className="font-mono">{lang==='pt'?'Todos os sistemas operacionais':'All systems operational'}</span>

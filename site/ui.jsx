@@ -51,7 +51,7 @@ const Card = ({ children, className = '', interactive = false }) => (
 const SectionHeader = ({ eyebrow, title, sub, align = 'center' }) => (
   <div className={`flex flex-col gap-4 mb-8 md:mb-12 ${align === 'center' ? 'items-center text-center' : 'items-start text-left'}`}>
     {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-    <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter max-w-3xl" style={{textWrap:'balance'}}>{title}</h2>
+    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter max-w-3xl" style={{textWrap:'balance'}}>{title}</h2>
     {sub && <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl font-medium" style={{textWrap:'pretty'}}>{sub}</p>}
   </div>
 );
