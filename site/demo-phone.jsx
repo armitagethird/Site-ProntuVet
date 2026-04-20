@@ -183,10 +183,10 @@ const PhoneRecording = ({ lang, seconds, bars, transcript, fmt }) => (
       </div>
     </div>
 
-    {/* WaveVisualizer — fiel ao app */}
-    <div className="w-full h-24 flex flex-col items-center justify-center relative mb-1">
+    {/* WaveVisualizer — isolado do timer para não causar reflow */}
+    <div className="w-full relative">
       <div className="absolute inset-0 bg-gradient-to-b from-teal-500/5 to-transparent rounded-3xl -z-10" />
-      <div className="flex items-center justify-center h-20 w-full px-8" style={{ gap: '3px' }}>
+      <div className="flex items-center justify-center h-20 w-full px-8" style={{ gap: '3px', overflow: 'hidden' }}>
         {bars.map((v, i) => (
           <div key={i}
             style={{
@@ -200,11 +200,11 @@ const PhoneRecording = ({ lang, seconds, bars, transcript, fmt }) => (
             }} />
         ))}
       </div>
-      {/* Timer com largura fixa para não tremer */}
-      <div className="mt-3 text-2xl font-mono font-black text-foreground tracking-tight"
-        style={{ fontVariantNumeric: 'tabular-nums', width: '5.5ch', textAlign: 'center' }}>
-        {fmt(seconds)}
-      </div>
+    </div>
+    {/* Timer — elemento irmão com altura fixa, não acoplado ao wave */}
+    <div className="h-8 flex items-center justify-center mb-1"
+      style={{ fontFamily: 'JetBrains Mono, monospace', fontVariantNumeric: 'tabular-nums', fontSize: '1.4rem', fontWeight: 900, letterSpacing: '-0.02em', minWidth: '5.5ch' }}>
+      {fmt(seconds)}
     </div>
 
     <div className="w-full flex-1 rounded-2xl bg-gradient-to-br from-teal-500/5 to-blue-500/5 border border-teal-500/10 p-3 overflow-hidden mb-3 mt-2">

@@ -34,7 +34,7 @@ const I18N = {
     how_step1_t: 'Você grava',
     how_step1_d: 'Toque em "Iniciar Escuta" no início da consulta. O áudio é capturado diretamente pelo navegador.',
     how_step2_t: 'A IA estrutura',
-    how_step2_d: 'O Gemini transcreve e organiza tudo nos campos clínicos corretos — do histórico ao plano terapêutico.',
+    how_step2_d: 'O ProntuVet transcreve e organiza tudo nos campos clínicos corretos — do histórico ao plano terapêutico.',
     how_step3_t: 'Você revisa e assina',
     how_step3_d: 'Em segundos, revise, ajuste o que precisar, gere o PDF e entregue ao tutor.',
 
@@ -182,7 +182,7 @@ const I18N = {
       },
       {
         q: 'Qual IA é usada?',
-        a: 'Google Gemini 2.5 Flash-Lite, com prompts otimizados para medicina veterinária. Nenhum dado é usado para treinar modelos.'
+        a: 'Calma, isso é nosso segredo.'
       },
       {
         q: 'Como cancelo?',

@@ -183,10 +183,10 @@ const DesktopRecording = ({ lang, seconds, bars, transcript, fmt }) => (
       </div>
     </div>
 
-    {/* WaveVisualizer — fiel ao app */}
-    <div className="w-full h-24 flex flex-col items-center justify-center relative mb-4">
+    {/* WaveVisualizer — isolado do timer para não causar reflow */}
+    <div className="w-full relative mb-0">
       <div className="absolute inset-0 bg-gradient-to-b from-teal-500/5 to-transparent rounded-3xl -z-10" />
-      <div className="flex items-center justify-center h-20 w-full px-8" style={{ gap: '3px' }}>
+      <div className="flex items-center justify-center h-20 w-full px-8" style={{ gap: '3px', overflow: 'hidden' }}>
         {bars.map((v, i) => (
           <div key={i}
             style={{
@@ -200,9 +200,11 @@ const DesktopRecording = ({ lang, seconds, bars, transcript, fmt }) => (
             }} />
         ))}
       </div>
-      <div className="mt-6 text-3xl font-mono font-black text-foreground tabular-nums tracking-tight">
-        {fmt(seconds)}
-      </div>
+    </div>
+    {/* Timer — elemento irmão com altura fixa, não acoplado ao wave */}
+    <div className="h-10 flex items-center justify-center mb-4"
+      style={{ fontFamily: 'JetBrains Mono, monospace', fontVariantNumeric: 'tabular-nums', fontSize: '1.875rem', fontWeight: 900, letterSpacing: '-0.02em', minWidth: '6ch' }}>
+      {fmt(seconds)}
     </div>
 
     {/* Transcript preview */}
