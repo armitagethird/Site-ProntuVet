@@ -14,7 +14,7 @@ const Logo = ({ size = 'md', className = '' }) => {
   );
 };
 
-const Button = ({ children, variant = 'primary', size = 'md', icon, iconRight, className = '', ...props }) => {
+const Button = ({ children, variant = 'primary', size = 'md', icon, iconRight, className = '', href, ...props }) => {
   const base = 'inline-flex items-center justify-center gap-2 font-bold tracking-tight rounded-2xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-teal-500/20';
   const sizes = {
     sm: 'h-10 px-4 text-sm',
@@ -26,13 +26,18 @@ const Button = ({ children, variant = 'primary', size = 'md', icon, iconRight, c
     secondary: 'bg-white/70 dark:bg-white/5 backdrop-blur border border-slate-200/80 dark:border-white/10 text-slate-900 dark:text-slate-100 hover:border-teal-500/40 hover:bg-white dark:hover:bg-white/10',
     ghost: 'text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-500/5',
   };
-  return (
-    <button className={`${base} ${sizes[size]} ${variants[variant]} ${className}`} {...props}>
+  const classes = `${base} ${sizes[size]} ${variants[variant]} ${className}`;
+  const content = (
+    <>
       {icon && <span className="shrink-0">{icon}</span>}
       {children}
       {iconRight && <span className="shrink-0 transition-transform group-hover:translate-x-0.5">{iconRight}</span>}
-    </button>
+    </>
   );
+  if (href) {
+    return <a href={href} className={classes} {...props}>{content}</a>;
+  }
+  return <button className={classes} {...props}>{content}</button>;
 };
 
 const Eyebrow = ({ children, className = '' }) => (

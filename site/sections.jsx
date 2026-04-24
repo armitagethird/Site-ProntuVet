@@ -72,7 +72,10 @@ const Nav = ({ lang, setLang, dark, setDark, tweaksOn, setTweaksOn }) => {
               aria-label="toggle theme">
               <window.Icon name={dark ? 'sun' : 'moon'} className="w-4 h-4" />
             </button>
-            <Button variant="primary" size="sm" iconRight={<window.Icon name="arrow_right" className="w-4 h-4" />}>
+            <Button variant="ghost" size="sm" href="https://app.prontuvet.com/login" className="hidden sm:inline-flex">
+              {t.cta_login}
+            </Button>
+            <Button variant="primary" size="sm" href="https://app.prontuvet.com/login?tab=signup" iconRight={<window.Icon name="arrow_right" className="w-4 h-4" />}>
               {t.cta_start}
             </Button>
           </div>
@@ -101,7 +104,7 @@ const Hero = ({ lang }) => {
               {t.hero_sub}
             </p>
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-6">
-              <Button size="lg" iconRight={<window.Icon name="arrow_right" className="w-5 h-5" />}>{t.hero_cta_primary}</Button>
+              <Button size="lg" href="https://app.prontuvet.com/login?tab=signup" iconRight={<window.Icon name="arrow_right" className="w-5 h-5" />}>{t.hero_cta_primary}</Button>
               <a href="#how"><Button size="lg" variant="secondary" icon={<window.Icon name="play" className="w-4 h-4 fill-current" />}>{t.hero_cta_secondary}</Button></a>
             </div>
             <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -580,7 +583,7 @@ const PLAT_GRAD = 'linear-gradient(135deg,#475569 0%,#94a3b8 22%,#e2e8f0 42%,#f8
 const PLAT_GRAD_ANIM = { background: PLAT_GRAD, backgroundSize: '200% 100%', animation: 'shimmer 3.2s linear infinite' };
 
 const PricingCard = ({ plan, orderClass = '' }) => {
-  const { name, badge, proof, desc, price, period, feats, cta, featured, clinic } = plan;
+  const { name, badge, proof, desc, price, period, feats, cta, featured, clinic, href } = plan;
 
   /* PLATINUM — metallic dark, 2× wide on xl */
   if (featured) return (
@@ -619,9 +622,9 @@ const PricingCard = ({ plan, orderClass = '' }) => {
               </li>
             ))}
           </ul>
-          <button className="mt-auto h-13 py-3.5 rounded-2xl font-black text-base tracking-tight transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98]" style={{ ...PLAT_GRAD_ANIM, color: '#0c1420' }}>
+          <a href={href} className="mt-auto h-13 py-3.5 rounded-2xl font-black text-base tracking-tight transition-all duration-200 hover:scale-[1.02] hover:brightness-110 active:scale-[0.98] flex items-center justify-center" style={{ ...PLAT_GRAD_ANIM, color: '#0c1420' }}>
             {cta}
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -653,11 +656,11 @@ const PricingCard = ({ plan, orderClass = '' }) => {
               </li>
             ))}
           </ul>
-          <button className="mt-auto h-10 px-5 rounded-2xl text-sm font-bold transition-all"
+          <a href={href} className="mt-auto h-10 px-5 rounded-2xl text-sm font-bold transition-all flex items-center justify-center"
             style={{ border: '1px solid rgba(139,92,246,0.45)', color: '#a78bfa', background: 'rgba(139,92,246,0.07)' }}
             onMouseEnter={e => e.currentTarget.style.background = 'rgba(139,92,246,0.17)'}
             onMouseLeave={e => e.currentTarget.style.background = 'rgba(139,92,246,0.07)'}
-          >{cta}</button>
+          >{cta}</a>
         </div>
       </div>
     </div>
@@ -684,7 +687,7 @@ const PricingCard = ({ plan, orderClass = '' }) => {
             </li>
           ))}
         </ul>
-        <Button variant="secondary" size="md" className="mt-auto">{cta}</Button>
+        <Button variant="secondary" size="md" href={href} className="mt-auto">{cta}</Button>
       </Card>
     </div>
   );
@@ -693,10 +696,10 @@ const PricingCard = ({ plan, orderClass = '' }) => {
 const Pricing = ({ lang }) => {
   const t = window.I18N[lang];
   const plans = [
-    { name: t.price_free_name, desc: t.price_free_desc, price: t.price_free_price, period: t.price_free_period, feats: t.price_free_feats, cta: t.price_free_cta },
-    { name: t.price_ess_name, desc: t.price_ess_desc, price: t.price_ess_price, period: t.price_ess_period, feats: t.price_ess_feats, cta: t.price_ess_cta },
-    { name: t.price_plat_name, badge: t.price_plat_badge, proof: t.price_plat_proof, desc: t.price_plat_desc, price: t.price_plat_price, period: t.price_plat_period, feats: t.price_plat_feats, cta: t.price_plat_cta, featured: true },
-    { name: t.price_clinic_name, desc: t.price_clinic_desc, price: t.price_clinic_price, period: t.price_clinic_period, feats: t.price_clinic_feats, cta: t.price_clinic_cta, clinic: true },
+    { name: t.price_free_name, desc: t.price_free_desc, price: t.price_free_price, period: t.price_free_period, feats: t.price_free_feats, cta: t.price_free_cta, href: 'https://app.prontuvet.com/login?tab=signup' },
+    { name: t.price_ess_name, desc: t.price_ess_desc, price: t.price_ess_price, period: t.price_ess_period, feats: t.price_ess_feats, cta: t.price_ess_cta, href: 'https://app.prontuvet.com/assinatura?plano=essential&ciclo=monthly' },
+    { name: t.price_plat_name, badge: t.price_plat_badge, proof: t.price_plat_proof, desc: t.price_plat_desc, price: t.price_plat_price, period: t.price_plat_period, feats: t.price_plat_feats, cta: t.price_plat_cta, featured: true, href: 'https://app.prontuvet.com/assinatura?plano=platinum&ciclo=monthly' },
+    { name: t.price_clinic_name, desc: t.price_clinic_desc, price: t.price_clinic_price, period: t.price_clinic_period, feats: t.price_clinic_feats, cta: t.price_clinic_cta, clinic: true, href: 'https://app.prontuvet.com/assinatura?plano=clinica&ciclo=monthly' },
   ];
   // Mobile order: Platinum(1) → Essential(2) → Free(3) → Clinic(4)
   // Desktop (md+): order-none resets to 0, so DOM order takes over: Free, Essential, Platinum, Clinic
@@ -762,10 +765,10 @@ const FinalCTA = ({ lang }) => {
             <p className="text-lg md:text-2xl font-medium text-white/90 mb-8" style={{ textWrap: 'pretty' }}>
               {t.cta_sub}
             </p>
-            <button className="inline-flex items-center gap-3 h-14 px-8 rounded-2xl bg-white text-teal-700 font-black text-base shadow-2xl shadow-black/30 hover:scale-[1.03] transition-transform">
+            <a href="https://app.prontuvet.com/login?tab=signup" className="inline-flex items-center gap-3 h-14 px-8 rounded-2xl bg-white text-teal-700 font-black text-base shadow-2xl shadow-black/30 hover:scale-[1.03] transition-transform">
               {t.cta_btn}
               <window.Icon name="arrow_right" className="w-5 h-5" />
-            </button>
+            </a>
             <div className="mt-6 text-sm text-white/80 font-medium">
               {t.cta_foot}
             </div>
@@ -780,14 +783,31 @@ const FinalCTA = ({ lang }) => {
 const Footer = ({ lang }) => {
   const t = window.I18N[lang];
   const cols = [
-    { h: t.footer_prod, items: [t.nav_features, t.nav_pricing, t.nav_security, 'Changelog'] },
-    { h: t.footer_company, items: [lang === 'pt' ? 'Sobre' : 'About', 'Blog', lang === 'pt' ? 'Contato' : 'Contact'] },
-    { h: t.footer_legal, items: [lang === 'pt' ? 'Termos' : 'Terms', lang === 'pt' ? 'Privacidade' : 'Privacy', 'LGPD'] },
+    { h: t.footer_prod, items: [
+      { label: t.nav_features, href: '#features' },
+      { label: t.nav_pricing, href: '#pricing' },
+      { label: t.nav_security, href: '#security' },
+      { label: 'Changelog', href: '#' },
+    ]},
+    { h: t.footer_company, items: [
+      { label: lang === 'pt' ? 'Sobre' : 'About', href: '#' },
+      { label: 'Blog', href: '#' },
+    ]},
+    { h: t.footer_legal, items: [
+      { label: lang === 'pt' ? 'Termos' : 'Terms', href: 'https://app.prontuvet.com/termos' },
+      { label: lang === 'pt' ? 'Privacidade' : 'Privacy', href: 'https://app.prontuvet.com/privacidade' },
+      { label: 'LGPD', href: 'https://app.prontuvet.com/privacidade' },
+    ]},
+    { h: lang === 'pt' ? 'Contato' : 'Contact', items: [
+      { label: 'contato@prontuvet.com', href: 'mailto:contato@prontuvet.com' },
+      { label: 'suporte@prontuvet.com', href: 'mailto:suporte@prontuvet.com' },
+      { label: 'privacidade@prontuvet.com', href: 'mailto:privacidade@prontuvet.com' },
+    ]},
   ];
   return (
     <footer className="relative border-t border-slate-200/80 dark:border-white/5 py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-6 md:gap-8">
           <div className="col-span-2">
             <Logo size="md" />
             <p className="text-sm text-slate-600 dark:text-slate-400 mt-3 max-w-xs font-medium">{t.footer_tag}</p>
@@ -797,7 +817,7 @@ const Footer = ({ lang }) => {
               <div className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 mb-4">{c.h}</div>
               <ul className="space-y-2.5 text-sm font-medium">
                 {c.items.map((it, j) => (
-                  <li key={j}><a href="#" className="text-slate-700 dark:text-slate-300 hover:text-teal-600 transition-colors link-underline">{it}</a></li>
+                  <li key={j}><a href={it.href} className="text-slate-700 dark:text-slate-300 hover:text-teal-600 transition-colors link-underline break-all">{it.label}</a></li>
                 ))}
               </ul>
             </div>
